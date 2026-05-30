@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="featured-container">
     <h2 class="section-title">最新文章</h2>
 

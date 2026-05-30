@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBar v-if="$route.name !== 'article'" />
+    <NavBar />
     <router-view />
   </div>
 </template>
@@ -21,7 +21,8 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* 防止水平滚动条出现 */
+  overflow-x: hidden;
+  background: #beecec; /* 防止水平滚动条出现 */
 }
 
 #app {

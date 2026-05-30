@@ -1,5 +1,21 @@
 <template>
   <div class="auth-container">
+    <!-- 动态粒子装饰 -->
+    <div class="bg-particles">
+      <div class="particle p-1"></div>
+      <div class="particle p-2"></div>
+      <div class="particle p-3"></div>
+      <div class="particle p-4"></div>
+      <div class="particle p-5"></div>
+      <div class="particle p-6"></div>
+      <div class="particle p-7"></div>
+      <div class="particle p-8"></div>
+    </div>
+
+    <!-- 渐变光环 -->
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+
     <form class="form" @submit.prevent="handleRegister">
       <div class="title">
         注册
@@ -25,7 +41,10 @@
         type="email"
         placeholder="邮箱 (可选)"
       />
-      <button class="button-confirm" type="submit">注册</button>
+      <button class="button-confirm" type="submit">
+        <span>注册</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+      </button>
       <p class="register-link">
         已有账号？<router-link to="/login">去登录</router-link>
       </p>
@@ -69,115 +88,164 @@ const handleRegister = async () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: url('/register-bg.jpg') center center / cover no-repeat fixed;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a0533, #2d1b69, #1e0a3c);
+  background-size: 300% 300%;
+  animation: gradientDrift 10s ease infinite;
+}
+@keyframes gradientDrift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 50%; }
 }
 
-/* 星空主题表单样式 */
+/* 光环 */
+.glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 0;
+}
+.glow-1 {
+  width: 400px; height: 400px;
+  background: #a855f7;
+  top: -20%; left: -15%;
+  animation: glowPulse 6s ease-in-out infinite;
+}
+.glow-2 {
+  width: 350px; height: 350px;
+  background: #ec4899;
+  bottom: -15%; right: -10%;
+  animation: glowPulse 8s ease-in-out infinite 1s;
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(1.15); }
+}
+
+/* 浮动粒子 */
+.bg-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c084fc;
+  opacity: 0.5;
+  animation: particleFloat 8s ease-in-out infinite;
+}
+.p-1 { top: 10%; left: 20%; animation-delay: 0s; background: #f9a8d4; }
+.p-2 { top: 25%; left: 70%; animation-delay: 1s; background: #a78bfa; }
+.p-3 { top: 45%; left: 15%; animation-delay: 2s; background: #c084fc; }
+.p-4 { top: 60%; left: 80%; animation-delay: 0.5s; background: #f9a8d4; }
+.p-5 { top: 75%; left: 40%; animation-delay: 1.5s; background: #a78bfa; }
+.p-6 { top: 15%; left: 50%; animation-delay: 3s; background: #c084fc; width: 4px; height: 4px; }
+.p-7 { top: 55%; left: 55%; animation-delay: 2.5s; background: #f9a8d4; width: 5px; height: 5px; }
+.p-8 { top: 85%; left: 10%; animation-delay: 1.8s; background: #a78bfa; width: 4px; height: 4px; }
+@keyframes particleFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+  25% { transform: translate(15px, -20px) scale(1.5); opacity: 0.7; }
+  50% { transform: translate(-10px, -35px) scale(1); opacity: 0.4; }
+  75% { transform: translate(-20px, -10px) scale(1.3); opacity: 0.6; }
+}
+
+/* 表单卡片 */
 .form {
-  --input-focus: #c084fc;       /* 淡紫色聚焦光晕 */
-  --font-color: #ffffff;
-  --font-color-sub: #e0d4ff;
-  --bg-color: rgba(10, 10, 30, 0.7);  /* 深蓝紫色半透明背景 */
-  --main-color: #8b5cf6;         /* 紫罗兰色边框 */
-  padding: 24px;
-  background: var(--bg-color);
-  backdrop-filter: blur(6px);     /* 轻微毛玻璃增加星空朦胧感（可选） */
+  position: relative;
+  z-index: 1;
+  padding: 36px 32px;
+  background: rgba(255, 255, 255, 0.04);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 20px;
-  border-radius: 24px;
-  border: 1px solid rgba(139, 92, 246, 0.5);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   width: 100%;
   max-width: 400px;
+  animation: formIn 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes formIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .title {
-  color: var(--font-color);
+  color: #fff;
   font-weight: 700;
   font-size: 26px;
-  margin-bottom: 0;
   text-align: center;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  letter-spacing: 2px;
 }
-
 .title span {
-  color: var(--font-color-sub);
+  color: rgba(255, 255, 255, 0.5);
   font-weight: 400;
   font-size: 14px;
   display: block;
-  margin-top: 4px;
+  margin-top: 6px;
+  letter-spacing: 1px;
 }
 
 .input {
   width: 100%;
-  height: 44px;
-  border-radius: 40px;
-  border: 1px solid rgba(139, 92, 246, 0.6);
-  background-color: rgba(255, 255, 255, 0.1);
-  box-shadow: none;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
   font-size: 15px;
-  font-weight: 500;
-  color: white;
+  color: #fff;
   padding: 0 16px;
   outline: none;
-  box-sizing: border-box;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
 }
-
-.input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-  font-weight: 400;
-}
-
+.input::placeholder { color: rgba(255, 255, 255, 0.3); }
 .input:focus {
-  border-color: var(--input-focus);
-  background-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.3);
+  border-color: #c084fc;
+  background: rgba(192, 132, 252, 0.08);
+  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.12);
+  transform: translateY(-1px);
 }
 
 .button-confirm {
-  width: 140px;
-  height: 44px;
-  border-radius: 40px;
+  width: 100%;
+  height: 48px;
+  border-radius: 12px;
   border: none;
-  background: linear-gradient(135deg, #8b5cf6, #c084fc);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #a855f7, #ec4899);
   font-size: 16px;
   font-weight: 600;
-  color: white;
+  color: #fff;
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  margin-top: 4px;
 }
-
 .button-confirm:hover {
-  background: linear-gradient(135deg, #7c3aed, #a855f7);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4);
 }
-
-.button-confirm:active {
-  transform: translateY(1px);
-}
+.button-confirm:active { transform: translateY(0); }
 
 .register-link {
-  margin-top: 8px;
   font-size: 13px;
-  color: #e0d4ff;
+  color: rgba(255, 255, 255, 0.5);
 }
-
 .register-link a {
-  color: #f3e8ff;
+  color: #c084fc;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.2s;
 }
-
-.register-link a:hover {
-  color: #ffffff;
-  text-decoration: underline;
-}
+.register-link a:hover { color: #e9d5ff; }
 </style>

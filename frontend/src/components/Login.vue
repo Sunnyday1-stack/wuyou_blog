@@ -1,5 +1,15 @@
 <template>
   <div class="auth-container">
+    <!-- 动态装饰元素 -->
+    <div class="bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
+      <div class="shape shape-5"></div>
+      <div class="shape shape-6"></div>
+    </div>
+
     <form class="form" @submit.prevent="handleLogin">
       <div class="title">
         登录
@@ -19,7 +29,10 @@
         placeholder="密码"
         required
       />
-      <button class="button-confirm" type="submit">登录</button>
+      <button class="button-confirm" type="submit">
+        <span>登录</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
       <p class="register-link">
         没有账号？<router-link to="/register">立即注册</router-link>
       </p>
@@ -65,116 +78,176 @@ const handleLogin = async () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  
-  /* 背景图片 + 深色柔和滤镜 + 模糊 */
-  background: url('/login-bg.jpg') center center / cover no-repeat fixed;
   position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease infinite;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-/* 背景遮罩层：让图片变暗、变柔，不影响表单 */
-.auth-container::before {
-  content: '';
+/* 浮动装饰形状 */
+.bg-shapes {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.35); /* 变暗 */
-  backdrop-filter: blur(6px);     /* 背景模糊 */
+  inset: 0;
+  pointer-events: none;
   z-index: 0;
 }
+.shape {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.08;
+}
+.shape-1 {
+  width: 300px; height: 300px;
+  background: #2dd4bf;
+  top: -10%; left: -5%;
+  animation: float1 14s ease-in-out infinite;
+}
+.shape-2 {
+  width: 200px; height: 200px;
+  background: #60a5fa;
+  bottom: -8%; right: -5%;
+  animation: float2 18s ease-in-out infinite;
+}
+.shape-3 {
+  width: 150px; height: 150px;
+  background: #f472b6;
+  top: 40%; right: 15%;
+  animation: float3 11s ease-in-out infinite;
+}
+.shape-4 {
+  width: 100px; height: 100px;
+  background: #fbbf24;
+  top: 15%; right: 30%;
+  animation: float1 16s ease-in-out infinite 2s;
+}
+.shape-5 {
+  width: 250px; height: 250px;
+  background: #34d399;
+  bottom: 20%; left: 10%;
+  animation: float2 20s ease-in-out infinite 1s;
+}
+.shape-6 {
+  width: 80px; height: 80px;
+  background: #a78bfa;
+  top: 60%; left: 30%;
+  animation: float3 13s ease-in-out infinite 3s;
+}
+@keyframes float1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+@keyframes float2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-50px, 30px) scale(1.15); }
+  66% { transform: translate(30px, -40px) scale(0.85); }
+}
+@keyframes float3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, 50px) scale(1.2); }
+}
 
-/* 表单样式 */
+/* 表单卡片 */
 .form {
-  --input-focus: #2d8cf0;
-  --font-color: #ffffff;
-  --font-color-sub: #e0e0e0;
-  --bg-color: rgba(255, 255, 255, 0.15); 
-  --main-color: rgba(255, 255, 255, 0.3);
-  padding: 28px;
-  background: var(--bg-color);
+  position: relative;
+  z-index: 1;
+  padding: 36px 32px;
+  background: rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
-  border-radius: 16px;
-  border: 1.5px solid var(--main-color);
+  gap: 22px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   width: 100%;
-  max-width: 420px;
-  backdrop-filter: blur(12px); /* 卡片更强毛玻璃 */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  position: relative;
-  z-index: 1;
+  max-width: 400px;
+  animation: formIn 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes formIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .title {
-  color: var(--font-color);
-  font-weight: 900;
-  font-size: 24px;
-  margin-bottom: 5px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 26px;
   text-align: center;
+  letter-spacing: 2px;
 }
-
 .title span {
-  color: var(--font-color-sub);
-  font-weight: 500;
-  font-size: 16px;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 400;
+  font-size: 14px;
   display: block;
-  margin-top: 4px;
+  margin-top: 6px;
+  letter-spacing: 1px;
 }
 
 .input {
   width: 100%;
-  height: 44px;
-  border-radius: 10px;
-  border: 1.5px solid var(--main-color);
-  background: rgba(255, 255, 255, 0.2);
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
   font-size: 15px;
-  font-weight: 500;
   color: #fff;
-  padding: 0 14px;
+  padding: 0 16px;
   outline: none;
-  box-sizing: border-box;
-  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
 }
-
-.input::placeholder {
-  color: #d0d0d0;
-}
-
+.input::placeholder { color: rgba(255, 255, 255, 0.35); }
 .input:focus {
-  border-color: #b1e7e5;
-  background: rgba(255, 255, 255, 0.25);
+  border-color: #2dd4bf;
+  background: rgba(45, 212, 191, 0.08);
+  box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.15);
+  transform: translateY(-1px);
 }
 
 .button-confirm {
   width: 100%;
-  height: 46px;
-  border-radius: 10px;
+  height: 48px;
+  border-radius: 12px;
   border: none;
-  background: rgba(177, 231, 229, 0.85);
+  background: linear-gradient(135deg, #2dd4bf, #0d9488);
   font-size: 16px;
   font-weight: 600;
-  color: #2c3e50;
+  color: #fff;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   transition: all 0.3s ease;
-  margin-top: 8px;
+  margin-top: 4px;
 }
-
 .button-confirm:hover {
-  background: rgba(177, 231, 229, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(45, 212, 191, 0.35);
+}
+.button-confirm:active { transform: translateY(0); }
+.button-confirm svg {
+  transition: transform 0.3s ease;
+}
+.button-confirm:hover svg {
+  transform: translateX(4px);
 }
 
 .register-link {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #fff;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
 }
-
 .register-link a {
-  color: #b1e7e5;
+  color: #2dd4bf;
   text-decoration: none;
   font-weight: 500;
+  transition: color 0.2s;
 }
+.register-link a:hover { color: #5eeadb; }
 </style>

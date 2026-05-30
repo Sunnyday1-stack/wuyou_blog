@@ -71,6 +71,14 @@
           </div>
           <div class="form-group">
             <label>内容 (Markdown) *</label>
+            <div style="margin-bottom: 8px;">
+              <el-upload class="upload-btn" :action="uploadUrl" :headers="uploadHeaders"
+                :on-success="handleUploadSuccess" :on-error="handleUploadError" :show-file-list="false"
+                accept="image/*">
+                <el-button size="small" type="primary">上传图片</el-button>
+              </el-upload>
+              <span style="margin-left: 8px; font-size: 12px; color: #888;">支持 jpg/png，不超过 5MB</span>
+            </div>
             <textarea v-model="form.content" rows="10" required></textarea>
           </div>
           <div class="form-group">
@@ -97,6 +105,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { ElMessage } from 'element-plus'
 
 const articles = ref([])
 const tags = ref([])
@@ -197,6 +206,31 @@ const submitForm = async () => {
   }
 }
 
+// 图片上传配置
+const uploadUrl = 'http://localhost:8080/api/upload/image'
+const uploadHeaders = {
+  Authorization: `Bearer ${localStorage.getItem('token')}`
+}
+
+// 上传成功回调
+const handleUploadSuccess = (response, file) => {
+  if (response.success) {
+    const imageMarkdown = `![](${response.url})`
+    console.log('准备插入的文本：', imageMarkdown)  // 新增
+    form.value.content += '\n' + imageMarkdown + '\n'
+    console.log('插入后的内容：', form.value.content) // 新增
+    ElMessage.success('图片已插入内容末尾')
+  } else {
+    ElMessage.error('上传失败：' + (response.message || '未知错误'))
+  }
+}
+
+// 上传失败回调
+const handleUploadError = (error) => {
+  console.error('上传出错', error)
+  ElMessage.error('上传失败，请检查网络或后端服务')
+}
+
 const deleteArticle = async (id) => {
   if (!confirm('确定删除该文章吗？')) return
   const token = localStorage.getItem('token')
@@ -257,8 +291,9 @@ onMounted(() => {
   padding: 1rem;
   background: linear-gradient(135deg, #fff8f5 0%, #fff 100%);
   border-radius: 24px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
 }
+
 h1 {
   font-size: 2rem;
   font-weight: 700;
@@ -266,21 +301,25 @@ h1 {
   margin-bottom: 1.5rem;
   letter-spacing: -0.01em;
 }
+
 .admin-layout {
   display: flex;
   gap: 2rem;
 }
+
 .articles-section {
   flex: 2;
 }
+
 .tags-section {
   flex: 1;
   background: white;
   padding: 1.2rem;
   border-radius: 20px;
   border: 1px solid #ffddd0;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
+
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -289,12 +328,14 @@ h1 {
   flex-wrap: wrap;
   gap: 0.8rem;
 }
+
 .section-header h2 {
   font-size: 1.5rem;
   font-weight: 700;
   color: #ea9679;
   margin: 0;
 }
+
 .create-btn {
   background: #ea9679;
   color: white;
@@ -305,25 +346,29 @@ h1 {
   transition: all 0.2s;
   cursor: pointer;
 }
+
 .create-btn:hover {
   background: #d4785c;
   transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(234,150,121,0.3);
+  box-shadow: 0 4px 10px rgba(234, 150, 121, 0.3);
 }
+
 .article-table {
   width: 100%;
   border-collapse: collapse;
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
+
 .article-table th,
 .article-table td {
   padding: 12px 16px;
   text-align: left;
   border-bottom: 1px solid #ffe4d9;
 }
+
 .article-table th {
   background: #ea9679;
   color: white;
@@ -332,10 +377,12 @@ h1 {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
 .article-table tr:hover {
   background: #fff0eb;
   transition: background 0.2s;
 }
+
 .edit-btn {
   background: #ffc4b3;
   border: none;
@@ -347,10 +394,12 @@ h1 {
   margin-right: 8px;
   transition: all 0.2s;
 }
+
 .edit-btn:hover {
   background: #ffaa94;
   transform: scale(0.96);
 }
+
 .delete-btn {
   background: #ffb3b3;
   border: none;
@@ -361,15 +410,18 @@ h1 {
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .delete-btn:hover {
   background: #ff9999;
   transform: scale(0.96);
 }
+
 .add-tag {
   display: flex;
   gap: 8px;
   align-items: center;
 }
+
 .add-tag input {
   padding: 8px 12px;
   border: 1px solid #ffe4d9;
@@ -378,10 +430,12 @@ h1 {
   font-size: 0.9rem;
   transition: all 0.2s;
 }
+
 .add-tag input:focus {
   border-color: #ea9679;
-  box-shadow: 0 0 0 2px rgba(234,150,121,0.2);
+  box-shadow: 0 0 0 2px rgba(234, 150, 121, 0.2);
 }
+
 .add-tag-btn {
   background: #ea9679;
   border: none;
@@ -392,13 +446,16 @@ h1 {
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .add-tag-btn:hover {
   background: #d4785c;
   transform: translateY(-1px);
 }
+
 .tags-list {
   margin-top: 1rem;
 }
+
 .tag-item {
   display: flex;
   justify-content: space-between;
@@ -406,10 +463,12 @@ h1 {
   padding: 10px 0;
   border-bottom: 1px solid #ffe4d9;
 }
+
 .tag-item span {
   font-size: 0.95rem;
   color: #4a4a4a;
 }
+
 .tag-delete {
   background: none;
   border: none;
@@ -419,25 +478,31 @@ h1 {
   border-radius: 30px;
   transition: all 0.2s;
 }
+
 .tag-delete:hover {
   background: #fff0eb;
   color: #d4785c;
 }
+
 .no-tags {
   text-align: center;
   padding: 1rem;
   color: #bcbcbc;
 }
+
 .modal {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2000;
 }
+
 .modal-content {
   background: white;
   padding: 2rem;
@@ -446,18 +511,22 @@ h1 {
   max-width: 800px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
 }
+
 .form-group {
   margin-bottom: 1.2rem;
 }
+
 .form-group label {
   display: block;
   font-weight: 600;
   margin-bottom: 0.4rem;
   color: #ea9679;
 }
-.form-group input, .form-group textarea {
+
+.form-group input,
+.form-group textarea {
   width: 100%;
   padding: 10px 14px;
   border: 1px solid #ffe4d9;
@@ -465,10 +534,13 @@ h1 {
   outline: none;
   transition: all 0.2s;
 }
-.form-group input:focus, .form-group textarea:focus {
+
+.form-group input:focus,
+.form-group textarea:focus {
   border-color: #ea9679;
-  box-shadow: 0 0 0 2px rgba(234,150,121,0.2);
+  box-shadow: 0 0 0 2px rgba(234, 150, 121, 0.2);
 }
+
 .tag-select {
   width: 100%;
   height: 120px;
@@ -476,12 +548,14 @@ h1 {
   border: 1px solid #ffe4d9;
   padding: 8px;
 }
+
 .form-actions {
   display: flex;
   gap: 1rem;
   justify-content: flex-end;
   margin-top: 1.5rem;
 }
+
 .form-actions button {
   padding: 8px 24px;
   border-radius: 40px;
@@ -490,41 +564,51 @@ h1 {
   cursor: pointer;
   transition: all 0.2s;
 }
+
 .form-actions button[type="submit"] {
   background: #ea9679;
   color: white;
 }
+
 .form-actions button[type="submit"]:hover {
   background: #d4785c;
   transform: translateY(-2px);
 }
+
 .form-actions button[type="button"] {
   background: #f0f0f0;
   color: #666;
 }
+
 .form-actions button[type="button"]:hover {
   background: #e0e0e0;
 }
+
 @media (max-width: 768px) {
   .admin-container {
     margin: 70px auto 1rem;
     padding: 0.8rem;
   }
+
   .admin-layout {
     flex-direction: column;
   }
+
   .article-table th,
   .article-table td {
     padding: 8px;
     font-size: 0.8rem;
   }
+
   .section-header {
     flex-direction: column;
     align-items: stretch;
   }
+
   .add-tag {
     width: 100%;
   }
+
   .add-tag input {
     flex: 1;
   }

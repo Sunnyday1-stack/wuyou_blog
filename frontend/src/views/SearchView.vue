@@ -1,15 +1,17 @@
 <template>
-  <div class="search-container">
-    <h1>{{ pageTitle }}</h1>
-    <div v-if="loading" class="loading">加载中...</div>
-    <div v-else-if="articles.length === 0" class="no-results">未找到相关文章</div>
-    <div v-else class="articles-grid">
-      <div v-for="article in articles" :key="article.id" class="article-card">
-        <router-link :to="`/article/${article.id}`" class="article-link">
-          <h2 class="article-title">{{ article.title }}</h2>
-        </router-link>
-        <p class="article-summary">{{ article.summary || '暂无摘要' }}</p>
-        <small class="article-date">{{ formatDate(article.createTime) }}</small>
+  <div class="search-page">
+    <div class="search-container">
+      <h1>{{ pageTitle }}</h1>
+      <div v-if="loading" class="loading">加载中...</div>
+      <div v-else-if="articles.length === 0" class="no-results">未找到相关文章</div>
+      <div v-else class="articles-grid">
+        <div v-for="article in articles" :key="article.id" class="article-card">
+          <router-link :to="`/article/${article.id}`" class="article-link">
+            <h2 class="article-title">{{ article.title }}</h2>
+          </router-link>
+          <p class="article-summary">{{ article.summary || '暂无摘要' }}</p>
+          <small class="article-date">{{ formatDate(article.createTime) }}</small>
+        </div>
       </div>
     </div>
   </div>
@@ -59,18 +61,36 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.search-page {
+  min-height: 100vh;
+  background: url('/register-bg.jpg') fixed center center / cover no-repeat;
+  position: relative;
+}
+.search-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 35, 0.45);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .search-container {
+  position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 80px auto 2rem;
   padding: 2rem;
-  background: rgba(137, 205, 227, 0.4); /* #89cde3 40% 透明度 */
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
   border-radius: 32px;
   min-height: calc(100vh - 100px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 h1 {
   font-size: 2rem;
-  color: #2c3e50;
+  color: #f0f0f0;
   margin-bottom: 2rem;
   text-align: center;
   font-weight: 600;
@@ -80,30 +100,28 @@ h1 {
   text-align: center;
   padding: 3rem;
   font-size: 1.2rem;
-  color: #4a5568;
+  color: rgba(255, 255, 255, 0.6);
 }
 
-/* 文章网格布局：卡片式分隔 */
 .articles-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2rem;
 }
 
-/* 文章卡片样式 */
 .article-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.3);
   border-radius: 24px;
   padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .article-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .article-link {
@@ -114,19 +132,19 @@ h1 {
 .article-title {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: #f0f0f0;
   margin-bottom: 0.75rem;
   line-height: 1.4;
   transition: color 0.2s;
 }
 
 .article-title:hover {
-  color: #4299e1;
+  color: #f9d49a;
 }
 
 .article-summary {
   font-size: 0.95rem;
-  color: #4a5568;
+  color: rgba(255, 255, 255, 0.65);
   line-height: 1.5;
   margin-bottom: 1rem;
 }
@@ -134,11 +152,10 @@ h1 {
 .article-date {
   display: block;
   font-size: 0.8rem;
-  color: #718096;
+  color: rgba(255, 255, 255, 0.45);
   margin-top: 0.5rem;
 }
 
-/* 移动端适配 */
 @media (max-width: 768px) {
   .search-container {
     margin: 70px 1rem 1rem;

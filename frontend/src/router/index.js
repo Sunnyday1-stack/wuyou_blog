@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import Login from '@/components/Login.vue'
 import Register from '@/components/Register.vue'
 import AdminView from '../views/AdminView.vue'
+import DashboardView from '../views/DashboardView.vue'
 import SearchView from '../views/SearchView.vue'
 
 const routes = [
@@ -32,6 +33,7 @@ const routes = [
     component: AdminView,
     meta: { requiresAdmin: true }
   },
+  { path: '/admin/dashboard', name: 'dashboard', component: DashboardView, meta: { requiresAdmin: true } },
    { path: '/search', name: 'search', component: SearchView }
 ]
 

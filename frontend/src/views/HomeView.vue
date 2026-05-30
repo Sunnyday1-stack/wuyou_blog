@@ -35,13 +35,76 @@
 
     <!-- 关于我区块 -->
     <section id="about" class="section about" ref="sections">
-      <div class="glass-card fade-up">
-        <h2 class="about-title">
-          <span v-for="(ch, idx) in aboutTitleChars" :key="idx" class="title-char" :class="{ 'char-visible': aboutTitleVisible[idx] }">{{ ch }}</span>
-        </h2>
-        <p class="about-text">
-          <span v-for="(ch, idx) in aboutTextChars" :key="idx" class="text-char" :class="{ 'char-visible': aboutTextVisible[idx] }">{{ ch }}</span>
-        </p>
+      <div class="about-card fade-up">
+        <div class="about-header slide-in">
+          <div class="avatar-wrapper">
+            <img src="/avatar.jpg" alt="avatar" class="avatar-img" />
+          </div>
+          <h2 class="about-name">
+            <span v-for="(ch, idx) in aboutTitleChars" :key="idx" class="title-char" :class="{ 'char-visible': aboutTitleVisible[idx] }">{{ ch }}</span>
+          </h2>
+          <p class="about-tagline">全栈开发者  /  终身学习者  /  生活记录者</p>
+        </div>
+
+        <div class="about-bio slide-in" style="--order:1">
+          <p>
+            <span v-for="(ch, idx) in aboutTextChars" :key="idx" class="text-char" :class="{ 'char-visible': aboutTextVisible[idx] }">{{ ch }}</span>
+          </p>
+        </div>
+
+        <div class="about-resume">
+          <div class="resume-col">
+            <div class="resume-block slide-in" style="--order:2">
+              <h3 class="block-title"><span class="block-icon">🎓</span> 教育背景</h3>
+              <div class="edu-item">
+                <div class="edu-dot"></div>
+                <div class="edu-body">
+                  <strong>西华师范大学</strong>
+                  <span>计算机科学与技术 · 本科</span>
+                  <span class="edu-time">2024 - 2028</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="resume-block slide-in" style="--order:3">
+              <h3 class="block-title"><span class="block-icon">💼</span> 项目经历</h3>
+              <div class="project-item">
+                <h4>个人博客系统</h4>
+                <p>基于 Spring Boot + Vue 3 的全栈博客，支持文章管理、评论、标签分类、Markdown 渲染、图片上传。</p>
+              </div>
+
+            </div>
+
+            <div class="resume-block slide-in" style="--order:4">
+              <h3 class="block-title"><span class="block-icon">🏆</span> 获奖经历</h3>
+              <div class="project-item">
+                <h4>蓝桥杯全国软件和信息技术专业人才大赛</h4>
+                <p>嵌入式设计与开发组 · 省级二等奖</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="resume-col">
+            <div class="resume-block slide-in" style="--order:5">
+              <h3 class="block-title"><span class="block-icon">🛠</span> 技术栈</h3>
+              <div class="skill-tags">
+                <span class="skill-tag" v-for="s in skills" :key="s.name" :style="{ '--tag-bg': s.bg, '--tag-color': s.color }">{{ s.name }}</span>
+              </div>
+            </div>
+
+            <div class="resume-block slide-in" style="--order:6">
+              <h3 class="block-title"><span class="block-icon">📬</span> 联系方式</h3>
+              <div class="contact-list">
+                <a v-for="ct in contacts" :key="ct.label" :href="ct.link" target="_blank" class="contact-item">
+                  <span class="contact-icon" v-html="ct.icon"></span>
+                  <span class="contact-text">{{ ct.label }}: {{ ct.value }}</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="about-footer slide-in" style="--order:7">— 用代码书写生活 —</p>
       </div>
     </section>
   </div>
@@ -93,9 +156,10 @@ const stopTyping = () => {
   }
 }
 
-// ========== About 打字机动画 ==========
-const aboutTitle = '关于我'
-const aboutText = '我始终相信，冰冷的代码里藏着温柔的力量，想用它为世界，点亮一束属于我的阳光。'
+// ========== About 数据 ==========
+const aboutTitle = 'wuyou'
+const aboutText = '你好，我是 wuyou。热爱技术，也热爱生活。从大学开始接触编程，一路走来积累了不少项目经验。擅长 Spring Boot + Vue 全栈开发，对前端动效和用户体验有着执着的追求。业余时间喜欢摄影、阅读和写作，这个博客就是我记录成长、分享思考的小天地。希望我的文章能给你带来一些启发或乐趣。'
+
 const aboutTitleChars = aboutTitle.split('')
 const aboutTextChars = aboutText.split('')
 const aboutTitleVisible = ref(Array(aboutTitleChars.length).fill(false))
@@ -104,32 +168,42 @@ let aboutTypingStarted = false
 let aboutTitleTimer = null
 let aboutTextTimer = null
 
+const skills = [
+  { name: 'Vue.js', bg: 'rgba(79,192,141,0.2)', color: '#4fc08d' },
+  { name: 'React', bg: 'rgba(97,218,251,0.2)', color: '#61dafb' },
+  { name: 'Spring Boot', bg: 'rgba(109,179,63,0.2)', color: '#6db33f' },
+  { name: 'Java', bg: 'rgba(237,139,0,0.2)', color: '#f89820' },
+  { name: 'MySQL', bg: 'rgba(0,117,143,0.2)', color: '#00758f' },
+  { name: 'JavaScript', bg: 'rgba(247,223,30,0.2)', color: '#f0db4f' },
+  { name: 'Git', bg: 'rgba(240,80,51,0.2)', color: '#f05032' },
+  { name: 'Docker', bg: 'rgba(36,150,237,0.2)', color: '#2496ed' },
+  { name: 'Node.js', bg: 'rgba(51,153,51,0.2)', color: '#339933' },
+  { name: 'Redis', bg: 'rgba(220,56,45,0.2)', color: '#dc382d' },
+  { name: 'STM32', bg: 'rgba(3,46,130,0.2)', color: '#5b9bd5' },
+]
+
+const contacts = [
+  { label: 'Email', value: '1002701514@qq.com', link: 'mailto:1002701514@qq.com', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>' },
+  { label: 'GitHub', value: 'github.com/wuyou', link: 'https://github.com', icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.73.083-.73 1.205.085 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.762-1.604-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>' },
+]
+
+
 const startAboutTyping = () => {
   if (aboutTypingStarted) return
   aboutTypingStarted = true
-  let titleIndex = 0
+  let ti = 0
   aboutTitleTimer = setInterval(() => {
-    if (titleIndex < aboutTitleChars.length) {
-      aboutTitleVisible.value[titleIndex] = true
-      titleIndex++
-    } else {
-      clearInterval(aboutTitleTimer)
-      aboutTitleTimer = null
-      let textIndex = 0
+    if (ti < aboutTitleChars.length) { aboutTitleVisible.value[ti] = true; ti++ }
+    else {
+      clearInterval(aboutTitleTimer); aboutTitleTimer = null
+      let bi = 0
       aboutTextTimer = setInterval(() => {
-        if (textIndex < aboutTextChars.length) {
-          aboutTextVisible.value[textIndex] = true
-          textIndex++
-        } else {
-          clearInterval(aboutTextTimer)
-          aboutTextTimer = null
-        }
-      }, 50)
+        if (bi < aboutTextChars.length) { aboutTextVisible.value[bi] = true; bi++ }
+        else { clearInterval(aboutTextTimer); aboutTextTimer = null }
+      }, 40)
     }
-  }, 80)
-}
-
-// ========== 业务逻辑 ==========
+  }, 100)
+}// ========== 业务逻辑 ==========
 const handleCategorySelect = (id) => {
   selectedCategoryId.value = id
 }
@@ -215,6 +289,10 @@ onUnmounted(() => {
 })
 </script>
 
+<style>
+.about-card::-webkit-scrollbar{display:none}
+</style>
+
 <style scoped>
 /* 基础滚动容器 */
 .scroll-container {
@@ -276,9 +354,11 @@ onUnmounted(() => {
   z-index: 1;
   pointer-events: none;
 }
-.hero .content,
-.hero .weather-card-pos {
+.hero .content {
   position: relative;
+  z-index: 2;
+}
+.hero .weather-card-pos {
   z-index: 2;
 }
 .hero-title {
@@ -312,10 +392,9 @@ onUnmounted(() => {
 }
 .weather-card-pos {
   position: absolute;
-  top: 100px;
-  left: 20px;
-  right: auto;
-  z-index: 20;
+  top: 90px;
+  left: 24px;
+  z-index: 10;
 }
 
 /* Featured 区块 - 宫崎骏风格背景 + 毛玻璃元素 */
@@ -511,72 +590,207 @@ onUnmounted(() => {
   }
 }
 
-/* About 区块 - 固定背景 + 毛玻璃卡片 + 粒子光斑 */
-.about {
-  background: url('/about-bg.jpg') fixed center center / cover no-repeat;
+/* About 区块 - 个人简介 */
+.about { padding-top: 80px; box-sizing: border-box; background: url('/about-bg.jpg') fixed center center / cover no-repeat;
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .about::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  background: rgba(20, 20, 35, 0.4);
   pointer-events: none;
   z-index: 1;
-  background: radial-gradient(circle at 20% 40%, rgba(255, 230, 150, 0.2) 0%, transparent 50%),
-              radial-gradient(circle at 80% 70%, rgba(150, 210, 180, 0.2) 0%, transparent 50%),
-              repeating-radial-gradient(circle at 50% 50%, rgba(255, 200, 100, 0.1) 0px, rgba(255, 200, 100, 0) 2px);
-  animation: floatParticles 8s infinite alternate;
 }
-@keyframes floatParticles {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 5% 5%; }
-}
-.glass-card {
-  background: rgba(255, 248, 225, 0.1);
-  backdrop-filter: blur(6px);
-  border-radius: 32px;
-  padding: 2.5rem 3rem;
-  max-width: 700px;
+
+.about-card {
+  position: relative;
+  z-index: 2;
+  max-width: 820px;
   width: 90%;
   margin: 0 auto;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  text-align: center;
-  transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.8s ease;
+  padding: 2.5rem 2.8rem;
+  background: rgba(30, 30, 50, 0.65);
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  max-height: 88vh;
+  scrollbar-width: none;
 }
 .fade-up {
   opacity: 0;
   transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 .fade-up.visible {
   opacity: 1;
   transform: translateY(0);
 }
-.about-title {
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: #fef9e6;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  margin-bottom: 1.5rem;
-  letter-spacing: 2px;
-}
-.about-text {
-  font-size: 1.2rem;
-  line-height: 1.8;
-  color: #fff8e7;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  white-space: pre-wrap;
-}
-.title-char, .text-char {
+
+.slide-in {
   opacity: 0;
-  transition: opacity 0.1s ease;
+  transform: translateY(18px);
+  animation: slideUp 0.55s ease-out forwards;
+  animation-delay: calc(var(--order, 0) * 0.1s);
+  animation-play-state: paused;
 }
-.title-char.char-visible, .text-char.char-visible {
-  opacity: 1;
+.fade-up.visible .slide-in {
+  animation-play-state: running;
+}
+@keyframes slideUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.about-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.avatar-wrapper {
+  width: 90px; height: 90px;
+  margin: 0 auto 0.8rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid rgba(255,255,255,0.35);
+  box-shadow: 0 0 20px rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.08);
+}
+.avatar-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.about-name {
+  font-size: 2.2rem; font-weight: 600; color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  margin-bottom: 0.3rem; letter-spacing: 3px;
+}
+.about-tagline {
+  font-size: 0.9rem; color: rgba(255,255,255,0.65); letter-spacing: 1px;
+}
+
+.about-bio {
+  max-width: 600px; margin: 0 auto 2rem; text-align: center;
+}
+.about-bio p {
+  font-size: 1.05rem; line-height: 1.9; color: rgba(255,255,255,0.9);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.about-resume {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.2rem;
+}
+.resume-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.resume-block {
+  background: rgba(255,255,255,0.1);
+  border-radius: 18px;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.block-title {
+  font-size: 1rem; font-weight: 600; color: #fff;
+  margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.4rem;
+}
+.block-icon { font-size: 1.1rem; }
+
+.edu-item {
+  display: flex; gap: 0.8rem; align-items: flex-start;
+}
+.edu-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #f9a8d4; margin-top: 0.4rem; flex-shrink: 0;
+}
+.edu-body {
+  display: flex; flex-direction: column; gap: 0.15rem;
+}
+.edu-body strong { color: #fff; font-size: 0.95rem; }
+.edu-body span { color: rgba(255,255,255,0.7); font-size: 0.85rem; }
+.edu-time { color: rgba(255,255,255,0.45) !important; font-size: 0.8rem !important; }
+
+.project-item {
+  margin-bottom: 0.8rem;
+}
+.project-item:last-child { margin-bottom: 0; }
+.project-item h4 {
+  font-size: 0.9rem; color: #f9d49a; margin-bottom: 0.2rem; font-weight: 600;
+}
+.project-item p {
+  font-size: 0.82rem; color: rgba(255,255,255,0.65); line-height: 1.5;
+}
+
+.skill-tags {
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+}
+.skill-tag {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem; font-weight: 500;
+  background: var(--tag-bg, rgba(255,255,255,0.12));
+  color: var(--tag-color, rgba(255,255,255,0.9));
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: default;
+  transition: all 0.25s ease;
+}
+.skill-tag:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+  border-color: rgba(255,255,255,0.4);
+}
+
+.contact-list {
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.contact-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  color: rgba(255,255,255,0.7); text-decoration: none;
+  font-size: 0.85rem; padding: 0.35rem 0.6rem;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.25s ease;
+}
+.contact-item:hover {
+  color: #fff; background: rgba(255,255,255,0.18);
+  transform: translateX(4px);
+}
+.contact-icon { display: flex; align-items: center; flex-shrink: 0; }
+.contact-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.about-footer {
+  text-align: center; font-size: 0.85rem;
+  color: rgba(255,255,255,0.35); letter-spacing: 2px; margin-top: 1rem;
+}
+
+.title-char, .text-char { opacity: 0; transition: opacity 0.08s ease; }
+.title-char.char-visible, .text-char.char-visible { opacity: 1; }
+
+.glass-card, .about-title, .about-text { display: none; }
+
+@media (max-width: 768px) {
+  .about-card {
+    padding: 1.5rem 1.2rem;
+    width: 92%;
+    border-radius: 24px;
+    max-height: 85vh;
+  }
+  .about-name { font-size: 1.6rem; }
+  .about-tagline { font-size: 0.78rem; }
+  .about-bio p { font-size: 0.9rem; }
+  .about-resume {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .resume-col { gap: 1rem; }
+  .avatar-wrapper { width: 70px; height: 70px; }
+  .skill-tag { font-size: 0.75rem; padding: 0.25rem 0.7rem; }
 }
 
 /* 通用动画 */
@@ -590,42 +804,5 @@ onUnmounted(() => {
   transform: translateY(0);
 }
 
-/* 响应式 */
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2rem;
-  }
-  .hero-subtitle {
-    font-size: 1.2rem;
-  }
-  .weather-card-pos {
-    top: 120px;
-    left: 10px;
-    transform: scale(0.85);
-    transform-origin: top left;
-  }
-  .glass-card {
-    padding: 1.5rem;
-    width: 85%;
-  }
-  .about-title {
-    font-size: 1.8rem;
-  }
-  .about-text {
-    font-size: 1rem;
-  }
-  :deep(.category-filter .btn-category) {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.85rem;
-  }
-  :deep(.articles-grid .card-info) {
-    padding: 1rem;
-  }
-  :deep(.articles-grid .article-title) {
-    font-size: 1.1rem;
-  }
-  :deep(.sidebar .tag-cloud) {
-    padding: 1rem;
-  }
-}
 </style>
+

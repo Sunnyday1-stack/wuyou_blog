@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar" :class="{ 'navbar-hidden': isHidden, 'scrolled': isScrolled, 'admin-mode': isAdminRoute }">
+  <nav class="navbar" :class="{ 'navbar-hidden': isHidden, 'scrolled': isScrolled, 'admin-mode': isAdminRoute, 'article-mode': isArticleRoute }">
     <div class="nav-container">
       <ul id="top-nav">
         <li 
@@ -9,6 +9,7 @@
         >
           {{ item.label }}
         </li>
+        <li v-if="isAdmin" @click="handleNavClick('dashboard')">仪表盘</li>
         <li v-if="isAdmin" @click="handleNavClick('admin')">管理</li>
       </ul>
 
@@ -27,11 +28,18 @@
             type="text" 
             placeholder="搜索文章..."
             @keyup.enter="doSearch"
+            @keyup.escape="closeSearch"
             ref="searchInput"
           />
           <button class="search__icon" @click="doSearch">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
               <path d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"></path>
+            </svg>
+          </button>
+          <button class="search__close" @click="closeSearch" title="关闭搜索">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           </button>
         </div>
@@ -66,8 +74,9 @@ const searchInput = ref(null)
 const isHidden = ref(false)
 const isScrolled = ref(false)
 
-const isAdmin = computed(() => localStorage.getItem('role') === 'ADMIN')
-const isAdminRoute = computed(() => route.path === '/admin')
+const isAdmin = ref(false)
+const isAdminRoute = computed(() => route.path.startsWith('/admin'))
+const isArticleRoute = computed(() => route.name === 'article')
 
 const navItems = [
   { label: '首页', anchor: 'hero' },
@@ -133,12 +142,23 @@ const toggleSearch = () => {
     if (searchInput.value) {
       searchInput.value.focus()
     }
+    setTimeout(() => {
+      document.addEventListener("click", handleClickOutside)
+    }, 0)
   })
 }
 
 const closeSearch = () => {
   isSearchExpanded.value = false
-  searchKeyword.value = ''
+  searchKeyword.value = ""
+  document.removeEventListener("click", handleClickOutside)
+}
+
+const handleClickOutside = (e) => {
+  const wrapper = document.querySelector(".search-wrapper")
+  if (wrapper && !wrapper.contains(e.target)) {
+    closeSearch()
+  }
 }
 
 const doSearch = () => {
@@ -151,6 +171,10 @@ const doSearch = () => {
 function handleNavClick(anchor) {
   if (anchor === 'admin') {
     router.push('/admin')
+    return
+  }
+  if (anchor === 'dashboard') {
+    router.push('/admin/dashboard')
     return
   }
   if (router.currentRoute.value.path !== '/') {
@@ -172,6 +196,7 @@ function logout() {
   localStorage.removeItem('userId')
   localStorage.removeItem('role')
   username.value = ''
+  isAdmin.value = false
   router.push('/')
 }
 
@@ -188,6 +213,7 @@ async function deleteAccount() {
       alert('账号已注销')
       localStorage.clear()
       username.value = ''
+      isAdmin.value = false
       router.push('/')
     } else {
       alert(res.data.message || '注销失败')
@@ -201,6 +227,7 @@ async function deleteAccount() {
 // 监听路由变化，实时更新用户名（解决登录/退出后需刷新的问题）
 watch(() => route.path, () => {
   username.value = localStorage.getItem('username') || ''
+  isAdmin.value = localStorage.getItem('role') === 'ADMIN'
 }, { immediate: true })
 
 onMounted(() => {
@@ -435,6 +462,47 @@ li:hover {
   transform: translateY(-1px);
 }
 
+/* 文章页 - 星空深色背景 */
+.navbar.article-mode {
+  background: rgba(10, 10, 30, 0.75);
+  backdrop-filter: blur(12px);
+  color: #e0e0f0;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+.navbar.article-mode #top-nav li,
+.navbar.article-mode .welcome,
+.navbar.article-mode .nav-link,
+.navbar.article-mode .nav-btn,
+.navbar.article-mode .search-trigger svg,
+.navbar.article-mode .search__icon path {
+  color: #e0e0f0;
+  fill: #e0e0f0;
+}
+.navbar.article-mode .search-trigger {
+  background: rgba(255,255,255,0.1);
+}
+.navbar.article-mode .nav-link,
+.navbar.article-mode .welcome,
+.navbar.article-mode .logout-btn,
+.navbar.article-mode .delete-account-btn {
+  background: rgba(255,255,255,0.08);
+}
+.navbar.article-mode .nav-link:hover,
+.navbar.article-mode .logout-btn:hover,
+.navbar.article-mode .delete-account-btn:hover {
+  background: rgba(255,255,255,0.16);
+}
+.navbar.article-mode li:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+.navbar.article-mode .search__close {
+  color: rgba(255,255,255,0.5);
+}
+.navbar.article-mode .search__close:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+}
+
 .navbar.admin-mode {
   background: #ea9679;
   backdrop-filter: none;
@@ -463,6 +531,13 @@ li:hover {
 .navbar.admin-mode .logout-btn:hover,
 .navbar.admin-mode .delete-account-btn:hover {
   background: rgba(255,255,255,0.2);
+}
+.navbar.admin-mode .search__close {
+  color: rgba(255,255,255,0.6);
+}
+.navbar.admin-mode .search__close:hover {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
 }
 
 @media (max-width: 768px) {
