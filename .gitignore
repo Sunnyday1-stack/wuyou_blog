@@ -1,4 +1,3 @@
-# 鏋勫缓浜х墿 backend/target/ frontend/dist/ *.jar *.zip  # 渚濊禆 node_modules/ frontend/node_modules/  # IDE .vscode/ .idea/ *.iml  # 绯荤粺 .DS_Store Thumbs.db *.bak  # 鏃ュ織 *.log backend/logs/  # 鐜鍙橀噺锛堟晱鎰熶俊鎭笉涓婁紶锛?.env .env.local .env.production  # 涓婁紶鏂囦欢锛堟湰鍦版祴璇曠敤锛屼笉涓婁紶锛?backend/uploads/  # 澶囦唤鏂囦欢 mysql/ xianshang/  # 涓存椂鏂囦欢 temp_* 
-# 用户上传数据
-deploy/uploads/*
-!deploy/uploads/.gitkeep
+# 閺嬪嫬缂撴禍褏澧?backend/target/ frontend/dist/ *.jar *.zip  # 娓氭繆绂?node_modules/ frontend/node_modules/  # IDE .vscode/ .idea/ *.iml  # 缁崵绮?.DS_Store Thumbs.db *.bak  # 閺冦儱绻?*.log backend/logs/  # 閻滎垰顣ㄩ崣姗€鍣洪敍鍫熸櫛閹扮喍淇婇幁顖欑瑝娑撳﹣绱堕敍?.env .env.local .env.production  # 娑撳﹣绱堕弬鍥︽閿涘牊婀伴崷鐗堢ゴ鐠囨洜鏁ら敍灞肩瑝娑撳﹣绱堕敍?backend/uploads/  # 婢跺洣鍞ら弬鍥︽ mysql/ xianshang/  # 娑撳瓨妞傞弬鍥︽ temp_*  # 鐢ㄦ埛涓婁紶鏁版嵁 deploy/uploads/* !deploy/uploads/.gitkeep 
+xianshang/*.jar
+xianshang/*.zip
