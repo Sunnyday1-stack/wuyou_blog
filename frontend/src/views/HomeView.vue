@@ -322,6 +322,7 @@ onUnmounted(() => {
 .section {
   scroll-snap-align: start;
   height: 100vh;
+  height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -334,6 +335,7 @@ onUnmounted(() => {
 .hero {
   position: relative;
   overflow: hidden;
+  padding-top: 56px;
 }
 .hero-video-bg {
   position: absolute;
@@ -438,147 +440,57 @@ onUnmounted(() => {
     flex-direction: column;
     gap: 1rem;
   }
-}
+  .section-title {
+    font-size: 1.3rem;
+  }
 
-/* 分类标签毛玻璃效果 */
-:deep(.category-filter) {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
-  margin-bottom: 2rem;
-}
-:deep(.category-filter .btn-category) {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(8px);
-  border-radius: 40px;
-  color: white;
-  font-weight: 500;
-  padding: 0.6rem 1.2rem;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-:deep(.category-filter .btn-category.active) {
-  background: rgba(255, 255, 255, 0.35);
-  border-color: #f5c542;
-  color: #f5c542;
-  box-shadow: 0 0 8px rgba(245, 197, 66, 0.5);
-}
-:deep(.category-filter .btn-category:hover) {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.3);
-}
+  .hero {
+    padding-top: 56px;
+  }
 
-/* 文章卡片毛玻璃效果 */
-:deep(.articles-grid) {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-}
-@media (max-width: 992px) {
-  :deep(.articles-grid) {
-    grid-template-columns: repeat(2, 1fr);
+  .hero-title {
+    font-size: 1.8rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .weather-card-pos {
+    top: 68px;
+    left: 12px;
+  }
+
+  /* 移动端背景图片修复 */
+  .featured {
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .about {
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .hero-video-bg {
+    object-fit: cover;
+    object-position: center center;
   }
 }
-@media (max-width: 768px) {
-  :deep(.articles-grid) {
-    grid-template-columns: 1fr;
-  }
-}
-:deep(.articles-grid .card) {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  border-radius: 24px;
-  padding: 5px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-:deep(.articles-grid .card:hover) {
-  transform: translateY(-8px);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.2);
-}
-:deep(.articles-grid .card-info) {
-  background: transparent;
-  color: white;
-  padding: 1.5rem;
-  text-align: center;
-}
-:deep(.articles-grid .article-title) {
-  color: white;
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin-bottom: 0.75rem;
-  text-shadow: 0 2px 6px rgba(245, 197, 66, 0.4);
-}
-:deep(.articles-grid .article-summary) {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 0.75rem;
-}
-:deep(.articles-grid .article-date) {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.85rem;
-}
-/* 移除卡片原有的渐变伪元素，避免冲突 */
-:deep(.articles-grid .card::before),
-:deep(.articles-grid .card::after) {
-  display: none;
-}
 
-/* 热门标签毛玻璃效果 */
-:deep(.sidebar .tag-cloud) {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  border-radius: 24px;
-  padding: 1.2rem;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-:deep(.sidebar .tag-cloud h3) {
-  color: white;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
-:deep(.sidebar .tag-cloud .tags) {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-:deep(.sidebar .tag-cloud .tag) {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(4px);
-  color: white;
-  padding: 0.4rem 1rem;
-  border-radius: 30px;
-  font-size: 0.85rem;
-  transition: all 0.2s;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-:deep(.sidebar .tag-cloud .tag:hover) {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-}
+/* 分类标签 - 由 CategoryFilter 组件自行控制样式 */
 
-/* 淡入上浮动画 */
-.featured :deep(.category-filter) {
-  animation: fadeUp 0.6s ease-out forwards;
-  opacity: 0;
-  transform: translateY(20px);
-}
-.featured :deep(.articles-grid .card) {
-  opacity: 0;
-  transform: translateY(20px);
+/* 文章卡片 - 由 FeaturedArticles 组件自行控制样式 */
+
+/* 热门标签 - 由 TagCloud 组件自行控制样式 */
+
+/* 淡入动画 - 简化版 */
+.featured .featured-container {
   animation: fadeUp 0.6s ease-out forwards;
 }
-.featured :deep(.articles-grid .card:nth-child(1)) { animation-delay: 0.1s; }
-.featured :deep(.articles-grid .card:nth-child(2)) { animation-delay: 0.2s; }
-.featured :deep(.articles-grid .card:nth-child(3)) { animation-delay: 0.3s; }
-.featured :deep(.articles-grid .card:nth-child(4)) { animation-delay: 0.4s; }
-.featured :deep(.articles-grid .card:nth-child(5)) { animation-delay: 0.5s; }
-.featured :deep(.articles-grid .card:nth-child(6)) { animation-delay: 0.6s; }
-.featured :deep(.sidebar) {
+.featured .sidebar {
   animation: fadeUp 0.6s ease-out 0.3s forwards;
   opacity: 0;
   transform: translateY(20px);
@@ -775,22 +687,89 @@ onUnmounted(() => {
 .glass-card, .about-title, .about-text { display: none; }
 
 @media (max-width: 768px) {
-  .about-card {
-    padding: 1.5rem 1.2rem;
-    width: 92%;
-    border-radius: 24px;
-    max-height: 85vh;
+  .about {
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-y: auto;
+    padding: 70px 0 1.5rem;
+    align-items: flex-start;
   }
-  .about-name { font-size: 1.6rem; }
-  .about-tagline { font-size: 0.78rem; }
-  .about-bio p { font-size: 0.9rem; }
+  .about-card {
+    padding: 1.2rem 0.8rem;
+    width: 95%;
+    max-width: 100%;
+    border-radius: 20px;
+    max-height: none;
+    overflow-y: visible;
+    margin: 0 auto;
+  }
+  .about-name { font-size: 1.4rem; letter-spacing: 2px; }
+  .about-tagline { font-size: 0.72rem; }
+  .about-bio { max-width: 100%; }
+  .about-bio p { font-size: 0.82rem; padding: 0 0.3rem; }
   .about-resume {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 0.7rem;
   }
-  .resume-col { gap: 1rem; }
-  .avatar-wrapper { width: 70px; height: 70px; }
-  .skill-tag { font-size: 0.75rem; padding: 0.25rem 0.7rem; }
+  .resume-col { gap: 0.7rem; }
+  .resume-block { padding: 0.8rem 1rem; border-radius: 14px; }
+  .avatar-wrapper { width: 60px; height: 60px; }
+  .skill-tag { font-size: 0.68rem; padding: 0.2rem 0.5rem; margin: 0.15rem; }
+  .about-footer { font-size: 0.7rem; }
+  .contact-item { font-size: 0.78rem; }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding-top: 52px;
+  }
+
+  .hero-title {
+    font-size: 1.4rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .weather-card-pos {
+    top: 62px;
+    left: 8px;
+    transform: scale(0.85);
+    transform-origin: top left;
+  }
+
+  .featured {
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .about {
+    background-size: cover;
+    background-position: center center;
+  }
+
+  .hero-video-bg {
+    object-position: center 20%;
+  }
+
+  .about-card { 
+    padding: 1rem 0.6rem; 
+    width: 98%;
+    border-radius: 16px;
+  }
+  .about-name { font-size: 1.2rem; }
+  .about-tagline { font-size: 0.68rem; }
+  .about-bio p { font-size: 0.78rem; }
+  .avatar-wrapper { width: 50px; height: 50px; }
+  .resume-block { padding: 0.7rem 0.8rem; }
+  .block-title { font-size: 0.9rem; }
+  .edu-body strong { font-size: 0.85rem; }
+  .edu-body span { font-size: 0.75rem; }
+  .project-item h4 { font-size: 0.8rem; }
+  .project-item p { font-size: 0.72rem; }
+  .skill-tag { font-size: 0.65rem; padding: 0.15rem 0.45rem; }
+  .contact-item { font-size: 0.72rem; padding: 0.3rem 0.5rem; }
 }
 
 /* 通用动画 */

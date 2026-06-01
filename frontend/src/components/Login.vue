@@ -51,7 +51,7 @@ const router = useRouter()
 
 const handleLogin = async () => {
   try {
-    const res = await axios.post('http://localhost:8080/api/auth/login', {
+    const res = await axios.post('/api/auth/login', {
       username: username.value,
       password: password.value
     })
@@ -250,4 +250,14 @@ const handleLogin = async () => {
   transition: color 0.2s;
 }
 .register-link a:hover { color: #5eeadb; }
+@media (max-width: 480px) {
+  .form {
+    padding: 24px 20px;
+    margin: 0 1rem;
+    max-width: 100%;
+  }
+  .title { font-size: 22px; }
+  .input { height: 44px; font-size: 14px; }
+  .button-confirm { height: 44px; }
+}
 </style>

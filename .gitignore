@@ -1,0 +1,4 @@
+# 鏋勫缓浜х墿 backend/target/ frontend/dist/ *.jar *.zip  # 渚濊禆 node_modules/ frontend/node_modules/  # IDE .vscode/ .idea/ *.iml  # 绯荤粺 .DS_Store Thumbs.db *.bak  # 鏃ュ織 *.log backend/logs/  # 鐜鍙橀噺锛堟晱鎰熶俊鎭笉涓婁紶锛?.env .env.local .env.production  # 涓婁紶鏂囦欢锛堟湰鍦版祴璇曠敤锛屼笉涓婁紶锛?backend/uploads/  # 澶囦唤鏂囦欢 mysql/ xianshang/  # 涓存椂鏂囦欢 temp_* 
+# 用户上传数据
+deploy/uploads/*
+!deploy/uploads/.gitkeep

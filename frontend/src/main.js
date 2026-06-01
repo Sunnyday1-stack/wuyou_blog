@@ -8,6 +8,9 @@ import axios from 'axios'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
+
+axios.defaults.baseURL = ''   // 换成你的服务器公网IP
+
 axios.interceptors.request.use(config => {
   const token = localStorage.getItem('token')
   if (token) {

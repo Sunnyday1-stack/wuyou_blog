@@ -22,11 +22,26 @@ html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background: #beecec; /* 防止水平滚动条出现 */
+  background: #beecec;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
 }
 
 #app {
   width: 100%;
   min-height: 100vh;
+}
+
+/* 移动端安全区域适配 */
+@media (max-width: 768px) {
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* 修复 iOS Safari 背景 fixed 问题 */
+  .featured, .about {
+    background-attachment: scroll !important;
+  }
 }
 </style>

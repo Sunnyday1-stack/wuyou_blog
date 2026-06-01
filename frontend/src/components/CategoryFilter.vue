@@ -1,5 +1,5 @@
 <template>
-  <div class="category-filter">
+  <div v-if="categories.length > 0" class="category-filter">
     <button
       :class="['btn-category', { active: selectedId === null }]"
       @click="selectCategory(null)"
@@ -32,7 +32,7 @@ const selectCategory = (id) => {
 
 const fetchCategories = async () => {
   try {
-    const res = await axios.get('http://localhost:8080/api/categories')
+    const res = await axios.get('/api/categories')
     categories.value = res.data
   } catch (error) {
     console.error('获取分类失败', error)
@@ -87,5 +87,23 @@ onMounted(() => {
     inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
     inset 0 0 0 1px #fce803;
   color: #e7b1e3;  /* 选中字体颜色改为 #e7b1e3 */
+}
+@media (max-width: 768px) {
+  .category-filter {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+  }
+  .btn-category {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-category {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.75rem;
+  }
 }
 </style>

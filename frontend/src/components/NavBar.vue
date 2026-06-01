@@ -1,7 +1,14 @@
 <template>
   <nav class="navbar" :class="{ 'navbar-hidden': isHidden, 'scrolled': isScrolled, 'admin-mode': isAdminRoute, 'article-mode': isArticleRoute }">
     <div class="nav-container">
-      <ul id="top-nav">
+      <!-- 移动端汉堡按钮 -->
+      <button class="hamburger" @click="toggleMenu" :aria-label="isMenuOpen ? '关闭菜单' : '打开菜单'">
+        <span :class="{ open: isMenuOpen }"></span>
+        <span :class="{ open: isMenuOpen }"></span>
+        <span :class="{ open: isMenuOpen }"></span>
+      </button>
+
+      <ul id="top-nav" class="desktop-nav">
         <li 
           v-for="item in navItems" 
           :key="item.anchor"
@@ -45,7 +52,37 @@
         </div>
       </div>
 
-      <div class="user-area">
+
+      <!-- 移动端唤醒菜单 -->
+      <Teleport to="body">
+        <div v-if="isMenuOpen" class="mobile-overlay" @click="closeMenu"></div>
+        <div v-if="isMenuOpen" class="mobile-menu">
+          <div class="mobile-menu-header">
+            <span class="mobile-menu-title">WuyouBlog</span>
+            <button class="mobile-menu-close" @click="closeMenu">&times;</button>
+          </div>
+          <ul class="mobile-nav">
+            <li v-for="item in navItems" :key="item.anchor" @click="handleNavClick(item.anchor); closeMenu()">
+              {{ item.label }}
+            </li>
+            <li v-if="isAdmin" @click="handleNavClick('dashboard'); closeMenu()">仪表盘</li>
+            <li v-if="isAdmin" @click="handleNavClick('admin'); closeMenu()">管理</li>
+          </ul>
+          <div class="mobile-menu-footer">
+            <template v-if="username">
+              <span class="mobile-welcome">👤 {{ username }}</span>
+              <button class="mobile-nav-btn" @click="logout(); closeMenu()">退出</button>
+              <button class="mobile-nav-btn mobile-delete-btn" @click="deleteAccount(); closeMenu()">注销账号</button>
+            </template>
+            <template v-else>
+              <router-link to="/login" class="mobile-nav-btn" @click="closeMenu()">登录</router-link>
+              <router-link to="/register" class="mobile-nav-btn" @click="closeMenu()">注册</router-link>
+            </template>
+          </div>
+        </div>
+      </Teleport>
+
+      <div class="user-area desktop-user">
         <template v-if="username">
           <span class="welcome">👋 {{ username }}</span>
           <button class="nav-btn logout-btn" @click="logout">退出</button>
@@ -77,6 +114,17 @@ const isScrolled = ref(false)
 const isAdmin = ref(false)
 const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 const isArticleRoute = computed(() => route.name === 'article')
+
+// 移动端唤醒菜单
+const isMenuOpen = ref(false)
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value
+  document.body.style.overflow = isMenuOpen.value ? 'hidden' : ''
+}
+const closeMenu = () => {
+  isMenuOpen.value = false
+  document.body.style.overflow = ''
+}
 
 const navItems = [
   { label: '首页', anchor: 'hero' },
@@ -205,7 +253,7 @@ async function deleteAccount() {
   if (!password) return
   try {
     const token = localStorage.getItem('token')
-    const res = await axios.delete('http://localhost:8080/api/auth/delete', {
+    const res = await axios.delete('/api/auth/delete', {
       params: { password },
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -236,6 +284,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   unbindScrollListener()
+  document.body.style.overflow = ''
 })
 </script>
 
@@ -251,17 +300,19 @@ onUnmounted(() => {
   transition: all 0.3s ease-in-out;
   display: flex;
   align-items: center;
-  background: transparent;
-  backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: white;
-  text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.7);
 }
 
 .navbar.scrolled {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  color: #1a202c;
-  text-shadow: none;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: white;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.7);
 }
 
 .navbar-hidden {
@@ -540,40 +591,230 @@ li:hover {
   color: #fff;
 }
 
+/* ========== 汉堡按钮（桌面端隐藏） ========== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  gap: 5px;
+  z-index: 1001;
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.hamburger span.open:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger span.open:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger span.open:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ========== 移动端唤醒菜单 ========== */
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 998;
+  animation: fadeIn 0.2s ease;
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 270px;
+  max-width: 80vw;
+  height: 100%;
+  height: 100dvh;
+  background: #1a1a2e;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 30px rgba(0,0,0,0.3);
+  animation: slideIn 0.25s ease;
+}
+
+.mobile-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.mobile-menu-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #ea9679;
+}
+
+.mobile-menu-close {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.mobile-menu-close:hover {
+  color: #fff;
+}
+
+.mobile-nav {
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.mobile-nav li {
+  padding: 0.85rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  transition: all 0.15s;
+  border-left: 3px solid transparent;
+}
+
+.mobile-nav li:hover,
+.mobile-nav li:active {
+  background: rgba(234, 150, 121, 0.12);
+  border-left-color: #ea9679;
+  color: #fff;
+}
+
+.mobile-menu-footer {
+  padding: 1rem 1.2rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.mobile-welcome {
+  width: 100%;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 0.2rem;
+}
+
+.mobile-nav-btn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.8);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.mobile-nav-btn:hover {
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+}
+
+.mobile-delete-btn {
+  color: #ff8888;
+  background: rgba(255,80,80,0.12);
+}
+
+.mobile-delete-btn:hover {
+  background: rgba(255,80,80,0.22);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
 @media (max-width: 768px) {
   .navbar {
-    height: 120px;
+    height: 50px;
+    padding: 0;
   }
   .nav-container {
-    padding: 0 1rem;
+    padding: 0 0.8rem;
+    flex-wrap: nowrap;
+    gap: 0;
+    justify-content: flex-start;
   }
-  li {
-    padding: 0.3rem 0.7rem;
-    font-size: 0.85rem;
+
+  /* 显示汉堡，隐藏桌面导航和用户区 */
+  .hamburger {
+    display: flex;
+  }
+  .desktop-nav {
+    display: none !important;
+  }
+  .desktop-user {
+    display: none !important;
+  }
+
+  /* 搜索靠右 */
+  .search-wrapper {
+    margin-left: auto;
+    margin-right: 0;
   }
   .search-container.expanded {
-    width: 180px;
+    width: 130px;
   }
-  .welcome, .nav-link, .nav-btn {
-    font-size: 0.75rem;
-    padding: 0.3rem 0.6rem;
+  .input {
+    font-size: 0.8rem;
+    padding: 5px 8px;
+  }
+  .search-trigger {
+    width: 30px;
+    height: 30px;
   }
 }
 
-@media (max-width: 550px) {
+@media (max-width: 480px) {
+  .navbar {
+    height: 48px;
+  }
   .nav-container {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
+    padding: 0 0.5rem;
   }
-  #top-nav {
-    justify-content: center;
+  .search-container.expanded {
+    width: 110px;
   }
-  .search-wrapper {
-    margin: 0.5rem 0;
-  }
-  .user-area {
-    justify-content: center;
+  .search-trigger {
+    width: 28px;
+    height: 28px;
   }
 }
 </style>

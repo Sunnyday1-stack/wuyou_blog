@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="featured-container">
     <h2 class="section-title">最新文章</h2>
 
@@ -41,27 +41,6 @@ const props = defineProps({
   }
 })
 
-const mockArticles = [
-  {
-    id: 1,
-    title: 'Vue 3 新特性解析',
-    summary: '详细介绍 Vue 3 的 Composition API 和其他改进',
-    createTime: '2023-10-10'
-  },
-  {
-    id: 2,
-    title: 'CSS Grid 实战',
-    summary: '如何使用 Grid 布局创建响应式网页',
-    createTime: '2023-11-15'
-  },
-  {
-    id: 3,
-    title: '全栈开发之路',
-    summary: '分享从零到一的成长经验',
-    createTime: '2024-01-20'
-  }
-]
-
 const articles = ref([])
 const loading = ref(true)
 
@@ -69,13 +48,13 @@ const fetchArticles = async () => {
   try {
     loading.value = true
     const url = props.categoryId
-      ? `http://localhost:8080/api/articles?categoryId=${props.categoryId}`
-      : 'http://localhost:8080/api/articles'
+      ? `/api/articles?categoryId=${props.categoryId}`
+      : '/api/articles'
     const res = await axios.get(url)
     articles.value = res.data
   } catch (error) {
-    console.error('获取文章失败，使用 mock 数据:', error)
-    articles.value = mockArticles
+    console.error('获取文章失败:', error)
+    articles.value = []
   } finally {
     loading.value = false
   }

@@ -49,7 +49,7 @@ const renderedContent = computed(() => {
 
 const incrementViewCount = async (id) => {
   try {
-    await axios.put(`http://localhost:8080/api/articles/${id}/view`)
+    await axios.put(`/api/articles/${id}/view`)
     if (article.value) {
       article.value.viewCount = (article.value.viewCount || 0) + 1
     }
@@ -155,7 +155,7 @@ onMounted(async () => {
   initStars()
   const id = route.params.id
   try {
-    const res = await axios.get(`http://localhost:8080/api/articles/${id}`)
+    const res = await axios.get(`/api/articles/${id}`)
     article.value = res.data
     incrementViewCount(id)
   } catch (error) {

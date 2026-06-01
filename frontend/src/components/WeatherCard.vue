@@ -259,4 +259,11 @@ onUnmounted(()=>{if(timer)clearInterval(timer);});
   width:100%;height:2px;
   background-color:rgb(233,233,233);border-radius:1px;
 }
+@media (max-width: 768px) {
+  .weather-card {
+    transform: scale(0.7);
+    transform-origin: top left;
+    font-size: 0.85rem;
+  }
+}
 </style>

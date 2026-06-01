@@ -108,8 +108,8 @@ const fetchData = async () => {
     const token = localStorage.getItem('token')
     const headers = { Authorization: `Bearer ${token}` }
     const [viewsRes, catRes] = await Promise.all([
-      axios.get('http://localhost:8080/api/dashboard/views', { headers }),
-      axios.get('http://localhost:8080/api/dashboard/category-stats', { headers })
+      axios.get('/api/dashboard/views', { headers }),
+      axios.get('/api/dashboard/category-stats', { headers })
     ])
     stats.value.totalViews = viewsRes.data.totalViews
     stats.value.articleCount = viewsRes.data.articleCount
@@ -250,9 +250,9 @@ onUnmounted(() => {
 <style scoped>
 .dashboard-container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 80px auto 0;
   padding: 2rem;
-  min-height: 100vh;
+  min-height: calc(100vh - 80px);
   background: linear-gradient(135deg, #fff8f5 0%, #fff 100%);
 }
 
@@ -452,6 +452,8 @@ onUnmounted(() => {
 
 @media (max-width: 768px) {
   .dashboard-container {
+    margin-top: 60px;
+    min-height: calc(100vh - 60px);
     padding: 1rem;
   }
   .stats-row {

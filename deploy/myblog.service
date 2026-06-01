@@ -1,0 +1,17 @@
+[Unit]
+Description=MyBlog Spring Boot Application
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/myblog
+Environment=MYSQL_PASSWORD=mq060403
+ExecStart=/usr/bin/java -jar /opt/myblog/myblog.jar --spring.profiles.active=prod
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

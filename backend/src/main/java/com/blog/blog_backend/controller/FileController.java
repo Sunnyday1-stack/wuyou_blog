@@ -1,6 +1,7 @@
 package com.blog.blog_backend.controller;
 
 import com.blog.blog_backend.utils.UserHolder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,8 +20,11 @@ import java.util.UUID;
 @RequestMapping("/api/upload")
 public class FileController {
 
-    // 图片保存的文件夹（你可以改成其他盘符，比如 D:/blog-images/）
-    private final String UPLOAD_DIR = "E:/my_blog/backend/uploads/";
+    @Value("${upload.dir:E:/my_blog/backend/uploads/}")
+    private String uploadDir;
+
+    @Value("${upload.url-prefix:/uploads/}")
+    private String urlPrefix;
 
     @PostMapping("/image")
     public Map<String, Object> uploadImage(@RequestParam("file") MultipartFile file) {
@@ -36,9 +40,9 @@ public class FileController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "只能上传图片文件");
         }
 
-        // 3. 限制大小（5MB）
-        if (file.getSize() > 5 * 1024 * 1024) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "图片不能超过5MB");
+        // 3. 限制大小：10MB
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "图片不能超过10MB");
         }
 
         // 4. 生成唯一文件名（避免重名覆盖）
@@ -50,7 +54,7 @@ public class FileController {
         String filename = UUID.randomUUID().toString() + ext;
 
         // 5. 确保文件夹存在
-        Path uploadPath = Paths.get(UPLOAD_DIR);
+        Path uploadPath = Paths.get(uploadDir);
         if (!Files.exists(uploadPath)) {
             try {
                 Files.createDirectories(uploadPath);
@@ -61,13 +65,13 @@ public class FileController {
 
         // 6. 保存文件到硬盘
         try {
-            file.transferTo(new File(UPLOAD_DIR + filename));
+            file.transferTo(new File(uploadDir + filename));
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "文件保存失败");
         }
 
-        // 7. 返回图片的访问URL
-        String imageUrl = "http://localhost:8080/uploads/" + filename;
+        // 7. 返回相对路径（不写死域名，兼容任何访问方式）
+        String imageUrl = urlPrefix + filename;
         Map<String, Object> result = new HashMap<>();
         result.put("success", true);
         result.put("url", imageUrl);

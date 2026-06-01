@@ -44,11 +44,11 @@ onMounted(async () => {
   try {
     let url = ''
     if (tagId) {
-      url = `http://localhost:8080/api/articles?tagId=${tagId}`
+      url = `/api/articles?tagId=${tagId}`
     } else if (keyword) {
-      url = `http://localhost:8080/api/articles/search?keyword=${encodeURIComponent(keyword)}`
+      url = `/api/articles/search?keyword=${encodeURIComponent(keyword)}`
     } else {
-      url = 'http://localhost:8080/api/articles'
+      url = '/api/articles'
     }
     const res = await axios.get(url)
     articles.value = res.data
@@ -158,21 +158,30 @@ h1 {
 
 @media (max-width: 768px) {
   .search-container {
-    margin: 70px 1rem 1rem;
+    margin: 60px 0.5rem 1rem;
     padding: 1rem;
+    border-radius: 20px;
   }
   h1 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
   }
   .articles-grid {
-    gap: 1rem;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
   }
   .article-card {
     padding: 1rem;
   }
   .article-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
+  }
+  .article-summary {
+    font-size: 0.85rem;
+  }
+  .loading, .no-results {
+    padding: 2rem 1rem;
+    font-size: 1rem;
   }
 }
 </style>

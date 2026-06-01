@@ -64,7 +64,7 @@ const router = useRouter()
 
 const handleRegister = async () => {
   try {
-    const res = await axios.post('http://localhost:8080/api/auth/register', {
+    const res = await axios.post('/api/auth/register', {
       username: username.value,
       password: password.value,
       email: email.value
@@ -248,4 +248,14 @@ const handleRegister = async () => {
   transition: color 0.2s;
 }
 .register-link a:hover { color: #e9d5ff; }
+@media (max-width: 480px) {
+  .form {
+    padding: 24px 20px;
+    margin: 0 1rem;
+    max-width: 100%;
+  }
+  .title { font-size: 22px; }
+  .input { height: 44px; font-size: 14px; }
+  .button-confirm { height: 44px; }
+}
 </style>

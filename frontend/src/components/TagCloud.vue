@@ -23,7 +23,7 @@ const tags = ref([])
 
 const fetchTags = async () => {
   try {
-    const res = await axios.get('http://localhost:8080/api/tags')
+    const res = await axios.get('/api/tags')
     tags.value = res.data
   } catch (error) {
     console.error('获取标签失败', error)

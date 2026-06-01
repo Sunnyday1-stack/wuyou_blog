@@ -96,7 +96,7 @@ const deleteComment = async (commentId) => {
   if (!confirm('确定要删除这条评论吗？')) return
   try {
     const token = localStorage.getItem('token')
-    await axios.delete(`http://localhost:8080/api/comments/${commentId}`, {
+    await axios.delete(`/api/comments/${commentId}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
     await fetchComments()
@@ -109,7 +109,7 @@ const deleteComment = async (commentId) => {
 const fetchComments = async () => {
   loadingComments.value = true
   try {
-    const res = await axios.get(`http://localhost:8080/api/comments/article/${props.articleId}`)
+    const res = await axios.get(`/api/comments/article/${props.articleId}`)
     comments.value = res.data
   } catch (error) {
     console.error('获取评论失败', error)
@@ -130,7 +130,7 @@ const submitComment = async () => {
   loading.value = true
   try {
     const token = localStorage.getItem('token')
-    await axios.post('http://localhost:8080/api/comments', {
+    await axios.post('/api/comments', {
       articleId: props.articleId,
       nickname: form.value.nickname,
       email: form.value.email || null,
